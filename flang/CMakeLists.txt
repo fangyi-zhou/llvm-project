@@ -461,12 +461,6 @@ if (FLANG_BUILD_TOOLS)
   add_subdirectory(tools)
 endif()
 
-option(FLANG_CUF_RUNTIME
-  "Compile CUDA Fortran runtime sources" OFF)
-if (FLANG_CUF_RUNTIME)
-  find_package(CUDAToolkit REQUIRED)
-endif()
-
 if (LLVM_INCLUDE_EXAMPLES)
   add_subdirectory(examples)
 endif()
