@@ -6,7 +6,7 @@
 #
 #===------------------------------------------------------------------------===#
 
-# Builds a library with common options for flang-rt.
+# Builds a library with common options for Flang-RT.
 #
 # Usage:
 #
@@ -142,8 +142,8 @@ function (add_flangrt_library name)
     add_library("${name_shared}" SHARED ${extra_args} ${ARG_ADDITIONAL_HEADERS} ${ARG_UNPARSED_ARGUMENTS})
   endif ()
 
-  # Provide a default target if building both and which exists in either setting.
   if (libtargets)
+    # Provide a default alias which exists in either setting.
     if (BUILD_SHARED_LIBS)
       if (build_shared)
         set(default_target "${name_shared}")
@@ -158,8 +158,14 @@ function (add_flangrt_library name)
       endif ()
     endif ()
     add_library(${name}.default ALIAS "${default_target}")
+
+    # Provide a build target that builds any enabled library.
+    # Not intended for target_link_libraries. Either use the ${name}.static,
+    # ${name}.shared variants, or ${name}.default to let BUILD_SHARED_LIBS
+    # decide.
     if (NOT TARGET ${name})
-      add_library(${name} ALIAS "${default_target}")
+      add_custom_target(${name})
+      add_dependencies(${name} ${libtargets})
     endif ()
   endif ()
 
@@ -213,11 +219,11 @@ function (add_flangrt_library name)
     endif ()
 
     # Flang-RT's public headers
-    target_include_directories(${tgtname} PRIVATE "${FLANG_RT_SOURCE_DIR}/include")
+    target_include_directories(${tgtname} PUBLIC "${FLANG_RT_SOURCE_DIR}/include")
 
     # For ISO_Fortran_binding.h to be found by the runtime itself (Accessed as #include "flang/ISO_Fortran_binding.h")
-    # User applications can use #include <ISO_Fortran_binding.h>
-    target_include_directories(${tgtname} PRIVATE "${FLANG_SOURCE_DIR}/include")
+      # User applications can use #include <ISO_Fortran_binding.h>
+  target_include_directories(${tgtname} PUBLIC "${FLANG_SOURCE_DIR}/include")
 
     # For Flang-RT's configured config.h to be found
     target_include_directories(${tgtname} PRIVATE "${FLANG_RT_BINARY_DIR}")
