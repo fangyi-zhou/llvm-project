@@ -97,7 +97,7 @@ if (NOT CMAKE_CROSSCOMPILING)
     endif()
 
     # Some modules have an implementation part that needs to be added to the
-    # flang_rt library.
+    # flang_rt.runtime library.
     set(compile_with "-fsyntax-only")
     set(object_output "")
     set(include_in_link FALSE)
@@ -114,14 +114,14 @@ if (NOT CMAKE_CROSSCOMPILING)
     install(FILES ${base}.mod DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/flang")
 
     # If a module has been compiled into an object file, add the file to
-    # the link line for the flang_rt library.
+    # the link line for the flang_rt.runtime library.
     if(include_in_link)
       list(APPEND module_objects ${object_output})
     endif()
   endforeach()
 
   # Set a CACHE variable that is visible to the CMakeLists.txt in runtime/, so that
-  # the compiled Fortran modules can be added to the link line of the flang_rt
+  # the compiled Fortran modules can be added to the link line of the flang_rt.runtime
   # library.
   set(FORTRAN_MODULE_OBJECTS ${module_objects} CACHE INTERNAL "" FORCE)
 
