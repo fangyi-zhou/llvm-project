@@ -111,6 +111,12 @@ public:
   }
 
   std::string VisitSymbolConjured(const SymbolConjured *S) {
+    if (S->getStmt() == nullptr) {
+      // FIXME: https://github.com/llvm/llvm-project/issues/57270
+      // a conjured symbol does not always have a statement, this should be
+      // replaced with a CFGElementRef.
+      return "conjured symbol of type '" + S->getType().getAsString() + "'";
+    }
     return "symbol of type '" + S->getType().getAsString() +
            "' conjured at statement '" + printStmt(S->getStmt()) + "'";
   }
